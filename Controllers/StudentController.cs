@@ -9,6 +9,8 @@ namespace ColleegeApp.Controllers
     {
         [HttpGet]
         [Route("All", Name = "GetAllstudents")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Student))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<Student>> GetAllStudents()
         {
             return Ok(CollegeRepository.Students);
@@ -16,6 +18,10 @@ namespace ColleegeApp.Controllers
 
         [HttpGet]
         [Route("{id}", Name = "GetStudentById")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Student))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<Student?> GetStudentById(int id)
         {
             if (id <= 0)
@@ -30,6 +36,10 @@ namespace ColleegeApp.Controllers
 
         [HttpGet]
         [Route("name", Name = "GetStudentByName")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Student))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<Student?> GetStudentById(string Name)
         {
             if (string.IsNullOrEmpty(Name))
@@ -37,24 +47,27 @@ namespace ColleegeApp.Controllers
 
             var student = CollegeRepository.Students?.FirstOrDefault(s => string.Equals(s.StudentName, Name, StringComparison.OrdinalIgnoreCase));
             if (student == null)
-                return NotFound($"Student with id {Name} not found");
+                return NotFound($"Student with name {Name} not found");
 
             return Ok(student);
         }
 
         [HttpDelete]
         [Route("{Id}", Name = "DeleteStudentById")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Student))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<bool> DeleteStudentById(int id)
         {
             if (id <= 0)
                 return BadRequest();
 
-            var studentToDelete = CollegeRepository.Students?.FirstOrDefault(s => s?.Id == id);
+            var studentToDelete = CollegeRepository.Students?.Where(s => s?.Id == id).FirstOrDefault();
 
             if (studentToDelete == null)
                 return NotFound($"Student with id {id} not found");
 
-            CollegeRepository.Students?.Remove(studentToDelete);
             return Ok(true);
         }
     }
