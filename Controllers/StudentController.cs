@@ -1,14 +1,15 @@
 ﻿using ColleegeApp.Models;
+using CollegeApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ColleegeApp.Controllers
+namespace CollegeApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
     {
         [HttpGet]
-        [Route("All", Name = "GetAllstudents")]
+        [Route("All", Name = "GetAllStudents")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Student))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<Student>> GetAllStudents()
@@ -27,7 +28,7 @@ namespace ColleegeApp.Controllers
             if (id <= 0)
                 return BadRequest();
 
-            var student = CollegeRepository.Students?.FirstOrDefault(s => s?.Id == id);
+            var student = CollegeRepository.Students.FirstOrDefault(s => s.Id == id);
             if (student == null)
                 return NotFound($"Student with id {id} not found");
 
@@ -40,14 +41,14 @@ namespace ColleegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<Student?> GetStudentById(string Name)
+        public ActionResult<Student?> GetStudentById(string name)
         {
-            if (string.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(name))
                 return BadRequest();
 
-            var student = CollegeRepository.Students?.FirstOrDefault(s => string.Equals(s.StudentName, Name, StringComparison.OrdinalIgnoreCase));
+            var student = CollegeRepository.Students.FirstOrDefault(s => string.Equals(s.StudentName, name, StringComparison.OrdinalIgnoreCase));
             if (student == null)
-                return NotFound($"Student with name {Name} not found");
+                return NotFound($"Student with name {name} not found");
 
             return Ok(student);
         }
@@ -63,7 +64,7 @@ namespace ColleegeApp.Controllers
             if (id <= 0)
                 return BadRequest();
 
-            var studentToDelete = CollegeRepository.Students?.Where(s => s?.Id == id).FirstOrDefault();
+            var studentToDelete = CollegeRepository.Students.FirstOrDefault(s => s.Id == id);
 
             if (studentToDelete == null)
                 return NotFound($"Student with id {id} not found");
