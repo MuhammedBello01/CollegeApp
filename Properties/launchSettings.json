@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "ColleegeApp": {
+    "CollegeApp": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
