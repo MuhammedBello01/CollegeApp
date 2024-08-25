@@ -1,5 +1,4 @@
-﻿using ColleegeApp.Models;
-using CollegeApp.Models;
+﻿using CollegeApp.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 

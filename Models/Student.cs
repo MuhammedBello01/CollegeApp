@@ -1,4 +1,4 @@
-﻿namespace ColleegeApp.Models
+﻿namespace CollegeApp.Models
 {
     public class Student
     {

@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using ColleegeApp.Models;
+using CollegeApp.Models;
 
 namespace CollegeApp.Models;
 
