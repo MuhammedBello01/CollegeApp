@@ -83,6 +83,7 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<StudentDto?> GetStudentById(string name)
         {
+            _logger.LogInformation("GetStudentByName Method Started");
             if (string.IsNullOrEmpty(name))
             {
                 _logger.LogWarning("Bad Request");
@@ -104,24 +105,28 @@ namespace CollegeApp.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteStudent/{Id}", Name = "DeleteStudentById")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("DeleteStudent/{id:int}", Name = "DeleteStudentById")]
+        [ProducesResponseType(StatusCodes.Status200OK,  Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<bool> DeleteStudentById(int id)
+        public ActionResult<string> DeleteStudentById(int id)
         {
+            _logger.LogInformation("Delete Method Started");
             if (id <= 0)
+            {
+                _logger.LogError($"Invalid Deletion Id: {id}");
                 return BadRequest();
-
+            }
             var studentToDelete = CollegeRepository.Students.FirstOrDefault(s => s.Id == id);
 
             if (studentToDelete == null)
+            {
+                _logger.LogError($"Student with id {id} not found");
                 return NotFound($"Student with id {id} not found");
-
+            }
             CollegeRepository.Students.Remove(studentToDelete);
-
-            return Ok(true);
+            return Ok($"Student with id {id} was successfully deleted.");
         }
 
         [HttpPost]
