@@ -85,7 +85,11 @@ namespace CollegeApp.Controllers
         public ActionResult<StudentDto?> GetStudentById(string name)
         {
             if (string.IsNullOrEmpty(name))
+            {
+                _logger.LogWarning("Bad Request");
                 return BadRequest();
+            }
+                
 
             var student = CollegeRepository.Students.FirstOrDefault(s => string.Equals(s.StudentName, name, StringComparison.OrdinalIgnoreCase));
             if (student == null)
