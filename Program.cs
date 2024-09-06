@@ -1,4 +1,6 @@
+using CollegeApp.Data;
 using CollegeApp.MyLogging;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,12 @@ Log.Logger = new LoggerConfiguration()
 builder.Logging.AddSerilog();// if u want to use both inbuilt loggers and serilog
 
 // Add services to the container.
+
+builder.Services.AddDbContext<CollegeDbContext>(options =>
+{
+    //Data Source=HP\SQLEXPRESS;Initial Catalog=collegeapp;Integrated Security=True;Trust Server Certificate=True
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CollegeAppDbConnection"));
+});
 
 builder.Services.AddControllers().AddNewtonsoftJson().AddXmlDataContractSerializerFormatters( );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
