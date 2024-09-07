@@ -17,7 +17,8 @@ namespace CollegeApp.Models
         public int Age { get; set;  }
         [Required(ErrorMessage = "Address is required")]
         public string? Address { get; set; }
-        [DateCheck]
-        public DateTime AdmissionDate { get; set;  }
+        //[DateCheck]
+        //public DateTime AdmissionDate { get; set;  }
+        public DateTime Dob { get; set; }
     }
 }
