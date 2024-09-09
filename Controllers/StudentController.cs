@@ -1,4 +1,5 @@
-﻿using CollegeApp.Data;
+﻿using AutoMapper;
+using CollegeApp.Data;
 using CollegeApp.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,12 @@ namespace CollegeApp.Controllers
     {
         private readonly ILogger<StudentController> _logger;
         private readonly CollegeDbContext _dbContext;
-        public StudentController( ILogger<StudentController> logger, CollegeDbContext dbContext)
+        private readonly IMapper _mapper;
+        public StudentController( ILogger<StudentController> logger, CollegeDbContext dbContext, IMapper mapper)
         {
             _logger = logger;
             _dbContext = dbContext;
+            _mapper = mapper;
         }
         [HttpGet]
         [Route("GetAllStudents", Name = "GetAllStudents")]
@@ -24,15 +27,17 @@ namespace CollegeApp.Controllers
         public async Task<ActionResult<IEnumerable<StudentDto>>> GetAllStudents()
         {
             _logger.LogInformation("GetStudents Method Started");
-            var students = await _dbContext.Students.Select(s => new StudentDto()
-            {
-                Id = s.Id,
-                Email = s.Email,
-                Address = s.Address,
-                StudentName = s.StudentName,
-                Dob = s.Dob,
-            }).ToListAsync();
-            return Ok(students);
+            //var students = await _dbContext.Students.Select(s => new StudentDto()
+            //{
+            //    Id = s.Id,
+            //    Email = s.Email,
+            //    Address = s.Address,
+            //    StudentName = s.StudentName,
+            //    Dob = s.Dob,
+            //}).ToListAsync();
+            var students = await _dbContext.Students.ToListAsync();
+            var studentDtoData = _mapper.Map<List<StudentDto>>(students);
+            return Ok(studentDtoData);
         }
 
         [HttpGet]
@@ -56,13 +61,14 @@ namespace CollegeApp.Controllers
                 return NotFound($"Student with id {id} not found");
             }
               
-            var studentDto = new StudentDto()
-            {
-                Id = student.Id,
-                Email = student.Email,
-                Address = student.Address,
-                StudentName = student.StudentName,
-            };
+            //var studentDto = new StudentDto()
+            //{
+            //    Id = student.Id,
+            //    Email = student.Email,
+            //    Address = student.Address,
+            //    StudentName = student.StudentName,
+            //};
+            var studentDto = _mapper.Map<StudentDto>(student);
             return Ok(studentDto);
         }
 
@@ -84,13 +90,14 @@ namespace CollegeApp.Controllers
             var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.StudentName.ToLower() == name.ToLower());
             if (student == null)
                 return NotFound($"Student with name {name} not found");
-            var studentDto = new StudentDto()
-            {
-                Id = student.Id,
-                Email = student.Email,
-                Address = student.Address,
-                StudentName = student.StudentName,
-            };
+            //var studentDto = new StudentDto()
+            //{
+            //    Id = student.Id,
+            //    Email = student.Email,
+            //    Address = student.Address,
+            //    StudentName = student.StudentName,
+            //};
+            var studentDto = _mapper.Map<StudentDto>(student);
             return Ok(studentDto);
         }
 
