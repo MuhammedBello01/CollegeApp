@@ -1,5 +1,6 @@
 using CollegeApp.Configurations;
 using CollegeApp.Data;
+using CollegeApp.Data.Repository;
 using CollegeApp.MyLogging;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -39,6 +40,8 @@ builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 builder.Services.AddScoped<IMyLogger, LogToFile>();  //Dependency injection
 // builder.Services.AddSingleton<IMyLogger, LogToFile>();
 // builder.Services.AddTransient<IMyLogger, LogToFile>();
+
+builder.Services.AddTransient<IStudentRepository, StudentRepository>();
 
 var app = builder.Build();
 
