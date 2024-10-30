@@ -5,7 +5,7 @@ namespace CollegeApp.Data.Repository
 {
     public class StudentRepository : IStudentRepository 
     {
-        public CollegeDbContext _dbContext { get; set; }
+        private CollegeDbContext _dbContext { get; set; }
         public StudentRepository(CollegeDbContext dbContext)
         {
             _dbContext = dbContext;

@@ -41,7 +41,9 @@ builder.Services.AddScoped<IMyLogger, LogToFile>();  //Dependency injection
 // builder.Services.AddSingleton<IMyLogger, LogToFile>();
 // builder.Services.AddTransient<IMyLogger, LogToFile>();
 
-builder.Services.AddTransient<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped(typeof(ICollegeRepository<>), typeof(CollegeRepository<>));
+
 
 var app = builder.Build();
 
