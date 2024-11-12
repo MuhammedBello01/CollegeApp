@@ -12,4 +12,6 @@ public class Student
     public string? Email { get; set; }
     public string? Address { get; set; }
     public DateTime Dob { get; set; }
+    public virtual Department? Department { get; set; }
+    public int? DepartmentId { get; set; }
 } 
