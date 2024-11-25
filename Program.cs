@@ -43,6 +43,32 @@ builder.Services.AddScoped<IMyLogger, LogToFile>();  //Dependency injection
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped(typeof(ICollegeRepository<>), typeof(CollegeRepository<>));
+builder.Services.AddScoped<IStudentRepositoryV2, StudentRepositoryV2>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+    options.AddPolicy("AllowOnlyLocalHost", policy =>
+    {
+        policy.WithOrigins("http://localhostL4200").AllowAnyHeader().AllowAnyMethod();
+    });
+    options.AddPolicy("AllowOnlyGoogle", policy =>
+    {
+        policy.WithOrigins("http://www.google.com", "http://www.gmail.com", "http://www.googledrive.com").AllowAnyHeader().AllowAnyMethod();
+    });
+    options.AddPolicy("AllowOnlyMicrosoft", policy =>
+    {
+        policy.WithOrigins("http://www.outlook.com", "http://www.microsoft.com", "http://www.onedrive.com").AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 
 
 var app = builder.Build();
@@ -56,8 +82,24 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowAll");
+app.UseRouting();
+app.UseCors("AllowAll");
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapGet("/testingendpoint",
+        context => context.Response.WriteAsync("Test Response"))
+        .RequireCors("AllowOnlyLocalHost");
+
+    endpoints.MapControllers()
+             .RequireCors("AllowAll");
+
+    endpoints.MapGet("/testingendpoint 2",
+        context => context.Response.WriteAsync("Test Response 2"));
+});
+
+//app.MapControllers();
 
 app.Run();
